@@ -84,6 +84,10 @@ oneway_field: &oneway
   key: oneway
   name: is_oneway
   type: direction
+junction_field: &junction
+  key: junction
+  name: junction
+  type: string
 motorroad_field: &motorroad
   key: motorroad
   name: is_motorroad
@@ -239,6 +243,14 @@ traffic_sign_backward_field: &traffic_sign_backward
   key: "traffic_sign:backward"
   name: traffic_sign_backward
   type: string
+width: &width
+  key: "width"
+  name: width
+  type: string
+width: &width_carriageway
+  key: "width:carriageway"
+  name: width_carriageway
+  type: string
 
 tables:
 # etldoc: imposm3 -> osm_highway_linestring
@@ -273,6 +285,7 @@ tables:
     - *ramp
     - *ford
     - *oneway
+    - *junction
     - *motorroad
     - *area
     - *service
@@ -300,6 +313,8 @@ tables:
     - *traffic_sign
     - *traffic_sign_forward
     - *traffic_sign_backward
+    - *width
+    - *width_carriageway
     - *foot
     - *horse
     - *mtb_scale
