@@ -215,6 +215,10 @@ surface_field: &surface
   key: surface
   name: surface
   type: string
+smoothness_field: &smoothness
+  key: smoothness
+  name: smoothness
+  type: string
 expressway_field: &expressway
   key: expressway
   name: expressway
@@ -320,6 +324,7 @@ tables:
     - *mtb_scale
     - *sac_scale
     - *surface
+    - *smoothness
     - *expressway
     mapping:
       highway:
