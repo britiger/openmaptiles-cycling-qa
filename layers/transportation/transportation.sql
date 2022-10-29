@@ -105,8 +105,8 @@ SELECT osm_id,
        NULLIF(horse, '') AS horse,
        NULLIF(mtb_scale, '') AS mtb_scale,
        NULLIF(surface, '') AS surface,
-       NULLIF(smoothness, '') AS smoothness,
-       NULLIF(surface_osm, '') AS surface_osm
+       COALESCE(NULLIF(cycleway_smoothness, ''),NULLIF(smoothness, '')) AS smoothness,
+       COALESCE(NULLIF(cycleway_surface, ''),NULLIF(surface_osm, '')) AS surface_osm
 FROM (
          -- etldoc: osm_transportation_merge_linestring_gen_z4 -> layer_transportation:z4
          SELECT osm_id,
@@ -151,7 +151,9 @@ FROM (
                 NULL AS mtb_scale,
                 NULL AS surface,
                 NULL AS smoothness,
+                NULL AS cycleway_smoothness,
                 NULL AS surface_osm,
+                NULL AS cycleway_surface,
                 z_order
          FROM osm_transportation_merge_linestring_gen_z4
          WHERE zoom_level = 4
@@ -200,7 +202,9 @@ FROM (
                 NULL AS mtb_scale,
                 NULL AS surface,
                 NULL AS smoothness,
+                NULL AS cycleway_smoothness,
                 NULL AS surface_osm,
+                NULL AS cycleway_surface,
                 z_order
          FROM osm_transportation_merge_linestring_gen_z5
          WHERE zoom_level = 5
@@ -249,7 +253,9 @@ FROM (
                 NULL AS mtb_scale,
                 NULL AS surface,
                 NULL AS smoothness,
+                NULL AS cycleway_smoothness,
                 NULL AS surface_osm,
+                NULL AS cycleway_surface,
                 z_order
          FROM osm_transportation_merge_linestring_gen_z6
          WHERE zoom_level = 6
@@ -298,7 +304,9 @@ FROM (
                 NULL AS mtb_scale,
                 NULL AS surface,
                 NULL AS smoothness,
+                NULL AS cycleway_smoothness,
                 NULL AS surface_osm,
+                NULL AS cycleway_surface,
                 z_order
          FROM osm_transportation_merge_linestring_gen_z7
          WHERE zoom_level = 7
@@ -347,7 +355,9 @@ FROM (
                 NULL AS mtb_scale,
                 NULL AS surface,
                 NULL AS smoothness,
+                NULL AS cycleway_smoothness,
                 NULL AS surface_osm,
+                NULL AS cycleway_surface,
                 z_order
          FROM osm_transportation_merge_linestring_gen_z8
          WHERE zoom_level = 8
@@ -396,7 +406,9 @@ FROM (
                 mtb_scale,
                 surface_value(surface) AS surface,
                 smoothness,
+                cycleway_smoothness,
                 surface AS surface_osm,
+                cycleway_surface,
                 z_order
          FROM osm_transportation_merge_linestring_gen_z9
          WHERE zoom_level = 9
@@ -445,7 +457,9 @@ FROM (
                 mtb_scale,
                 surface_value(surface) AS surface,
                 smoothness,
+                cycleway_smoothness,
                 surface AS surface_osm,
+                cycleway_surface,
                 z_order
          FROM osm_transportation_merge_linestring_gen_z10
          WHERE zoom_level = 10
@@ -494,7 +508,9 @@ FROM (
                 mtb_scale,
                 surface_value(surface) AS surface,
                 smoothness,
+                cycleway_smoothness,
                 surface AS surface_osm,
+                cycleway_surface,
                 z_order
          FROM osm_transportation_merge_linestring_gen_z11
          WHERE zoom_level = 11
@@ -548,7 +564,9 @@ FROM (
                 mtb_scale,
                 surface_value(surface) AS "surface",
                 smoothness,
+                cycleway_smoothness,
                 surface AS surface_osm,
+                cycleway_surface,
                 hl.z_order
          FROM osm_highway_linestring hl
          LEFT OUTER JOIN osm_transportation_name_network n ON hl.osm_id = n.osm_id
@@ -616,7 +634,9 @@ FROM (
                 NULL AS mtb_scale,
                 NULL AS surface,
                 NULL AS smoothness,
+                NULL AS cycleway_smoothness,
                 NULL AS surface_osm,
+                NULL AS cycleway_surface,
                 z_order
          FROM osm_railway_linestring_gen_z8
          WHERE zoom_level = 8
@@ -668,7 +688,9 @@ FROM (
                 NULL AS mtb_scale,
                 NULL AS surface,
                 NULL AS smoothness,
+                NULL AS cycleway_smoothness,
                 NULL AS surface_osm,
+                NULL AS cycleway_surface,
                 z_order
          FROM osm_railway_linestring_gen_z9
          WHERE zoom_level = 9
@@ -720,7 +742,9 @@ FROM (
                 NULL AS mtb_scale,
                 NULL AS surface,
                 NULL AS smoothness,
+                NULL AS cycleway_smoothness,
                 NULL AS surface_osm,
+                NULL AS cycleway_surface,
                 z_order
          FROM osm_railway_linestring_gen_z10
          WHERE zoom_level = 10
@@ -771,7 +795,9 @@ FROM (
                 NULL AS mtb_scale,
                 NULL AS surface,
                 NULL AS smoothness,
+                NULL AS cycleway_smoothness,
                 NULL AS surface_osm,
+                NULL AS cycleway_surface,
                 z_order
          FROM osm_railway_linestring_gen_z11
          WHERE zoom_level = 11
@@ -822,7 +848,9 @@ FROM (
                 NULL AS mtb_scale,
                 NULL AS surface,
                 NULL AS smoothness,
+                NULL AS cycleway_smoothness,
                 NULL AS surface_osm,
+                NULL AS cycleway_surface,
                 z_order
          FROM osm_railway_linestring_gen_z12
          WHERE zoom_level = 12
@@ -874,7 +902,9 @@ FROM (
                 NULL AS mtb_scale,
                 NULL AS surface,
                 NULL AS smoothness,
+                NULL AS cycleway_smoothness,
                 NULL AS surface_osm,
+                NULL AS cycleway_surface,
                 z_order
          FROM osm_railway_linestring
          WHERE zoom_level = 13
@@ -926,7 +956,9 @@ FROM (
                 NULL AS mtb_scale,
                 NULL AS surface,
                 NULL AS smoothness,
+                NULL AS cycleway_smoothness,
                 NULL AS surface_osm,
+                NULL AS cycleway_surface,
                 z_order
          FROM osm_aerialway_linestring_gen_z12
          WHERE zoom_level = 12
@@ -976,7 +1008,9 @@ FROM (
                 NULL AS mtb_scale,
                 NULL AS surface,
                 NULL AS smoothness,
+                NULL AS cycleway_smoothness,
                 NULL AS surface_osm,
+                NULL AS cycleway_surface,
                 z_order
          FROM osm_aerialway_linestring
          WHERE zoom_level >= 13
@@ -1025,7 +1059,9 @@ FROM (
                 NULL AS mtb_scale,
                 NULL AS surface,
                 NULL AS smoothness,
+                NULL AS cycleway_smoothness,
                 NULL AS surface_osm,
+                NULL AS cycleway_surface,
                 z_order
          FROM osm_shipway_linestring_gen_z11
          WHERE zoom_level = 11
@@ -1074,7 +1110,9 @@ FROM (
                 NULL AS mtb_scale,
                 NULL AS surface,
                 NULL AS smoothness,
+                NULL AS cycleway_smoothness,
                 NULL AS surface_osm,
+                NULL AS cycleway_surface,
                 z_order
          FROM osm_shipway_linestring_gen_z12
          WHERE zoom_level = 12
@@ -1124,7 +1162,9 @@ FROM (
                 NULL AS mtb_scale,
                 NULL AS surface,
                 NULL AS smoothness,
+                NULL AS cycleway_smoothness,
                 NULL AS surface_osm,
+                NULL AS cycleway_surface,
                 z_order
          FROM osm_shipway_linestring
          WHERE zoom_level >= 13
@@ -1181,7 +1221,9 @@ FROM (
                 NULL AS mtb_scale,
                 NULL AS surface,
                 NULL AS smoothness,
+                NULL AS cycleway_smoothness,
                 NULL AS surface_osm,
+                NULL AS cycleway_surface,
                 z_order
          FROM osm_highway_polygon
               -- We do not want underground pedestrian areas for now

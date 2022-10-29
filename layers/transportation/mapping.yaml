@@ -215,9 +215,17 @@ surface_field: &surface
   key: surface
   name: surface
   type: string
+cycleway_surface_field: &cycleway_surface
+  key: cycleway:surface
+  name: cycleway_surface
+  type: string
 smoothness_field: &smoothness
   key: smoothness
   name: smoothness
+  type: string
+cycleway_smoothness_field: &cycleway_smoothness
+  key: cycleway:smoothness
+  name: cycleway_smoothness
   type: string
 expressway_field: &expressway
   key: expressway
@@ -324,7 +332,9 @@ tables:
     - *mtb_scale
     - *sac_scale
     - *surface
+    - *cycleway_surface
     - *smoothness
+    - *cycleway_smoothness
     - *expressway
     mapping:
       highway:
