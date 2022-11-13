@@ -13,13 +13,18 @@ services:
   postgres:
     image: "${POSTGIS_IMAGE:-openmaptiles/postgis}:${TOOLS_VERSION}"
     # Use "command: postgres -c jit=off" for PostgreSQL 11+ because of slow large MVT query processing
+    # Use "shm_size: 512m" if you want to prevent a possible 'No space left on device' during 'make generate-tiles-pg'
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
       - postgres
-    ports:
-      - "5432"
-    env_file: .env-postgres
+    env_file: .env
+    environment:
+      # postgress container uses old variable names
+      POSTGRES_DB: ${PGDATABASE:-openmaptiles}
+      POSTGRES_USER: ${PGUSER:-openmaptiles}
+      POSTGRES_PASSWORD: ${PGPASSWORD:-openmaptiles}
+      PGPORT: ${PGPORT:-5432}
 
   import-data:
     image: "openmaptiles/import-data:${TOOLS_VERSION}"
@@ -44,6 +49,11 @@ services:
       IMPOSM_CONFIG_FILE: ${IMPOSM_CONFIG_FILE}
       # Control import-sql processes
       MAX_PARALLEL_PSQL: ${MAX_PARALLEL_PSQL}
+      PGDATABASE: ${PGDATABASE:-openmaptiles}
+      PGUSER: ${PGUSER:-openmaptiles}
+      PGPASSWORD: ${PGPASSWORD:-openmaptiles}
+      PGPORT: ${PGPORT:-5432}
+      MBTILES_FILE: ${MBTILES_FILE}
     networks:
       - postgres
     volumes:
@@ -53,6 +63,7 @@ services:
       - ./build/sql:/sql
       - ./build:/mapping
       - ./cache:/cache
+      - ./style:/style
 
   update-osm:
     <<: *openmaptiles-tools
@@ -71,6 +82,10 @@ services:
       MBTILES_NAME: ${MBTILES_FILE}
       # Control tilelive-copy threads
       COPY_CONCURRENCY: ${COPY_CONCURRENCY}
+      PGDATABASE: ${PGDATABASE:-openmaptiles}
+      PGUSER: ${PGUSER:-openmaptiles}
+      PGPASSWORD: ${PGPASSWORD:-openmaptiles}
+      PGPORT: ${PGPORT:-5432}
 
   generate-vectortiles:
     image: "openmaptiles/generate-vectortiles:${TOOLS_VERSION}"
@@ -88,6 +103,10 @@ services:
       # Control tilelive-copy threads
       COPY_CONCURRENCY: ${COPY_CONCURRENCY}
       #
+      PGDATABASE: ${PGDATABASE:-openmaptiles}
+      PGUSER: ${PGUSER:-openmaptiles}
+      PGPASSWORD: ${PGPASSWORD:-openmaptiles}
+      PGPORT: ${PGPORT:-5432}
 
   postserve:
     image: "openmaptiles/openmaptiles-tools:${TOOLS_VERSION}"
@@ -108,11 +127,15 @@ services:
       - "8088:8888"
 
   tileserver-gl:
-    image: "maptiler/tileserver-gl"
+    image: "maptiler/tileserver-gl:latest"
     command:
       - --port
       - "${TPORT:-8080}"
+      - --config
+      - "/style/config.json"
     ports:
       - "${TPORT:-8080}:${TPORT:-8080}"
     volumes:
       - ./data:/data
+      - ./style:/style
+      - ./build:/build
