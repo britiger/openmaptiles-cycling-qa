@@ -106,6 +106,14 @@ CREATE TABLE IF NOT EXISTS osm_transportation_merge_linestring_gen_z11(
     sidewalk_both_bicycle character varying,
     sidewalk_left_bicycle character varying,
     sidewalk_right_bicycle character varying,
+    cycleway_left_traffic_sign character varying,
+    sidewalk_left_traffic_sign character varying,
+    cycleway_left_oneway character varying,
+    sidewalk_left_oneway character varying,
+    cycleway_right_traffic_sign character varying,
+    sidewalk_right_traffic_sign character varying,
+    cycleway_right_oneway character varying,
+    sidewalk_right_oneway character varying,
     maxspeed integer,
     maxspeed_forward integer,
     maxspeed_backward integer,
@@ -127,7 +135,7 @@ CREATE TABLE IF NOT EXISTS osm_transportation_merge_linestring_gen_z11(
     layer integer
 );
 
-INSERT INTO osm_transportation_merge_linestring_gen_z11(geometry, osm_id, highway, network, construction, is_bridge, is_tunnel, is_ford, expressway, is_oneway, junction, is_motorroad, z_order, segregated, bicycle, is_bicycle_road, bicycle_forward, bicycle_backward, cycleway, cycleway_both, cycleway_left, cycleway_right, sidewalk_bicycle, sidewalk_both_bicycle, sidewalk_left_bicycle, sidewalk_right_bicycle, maxspeed, maxspeed_forward, maxspeed_backward, traffic_sign, traffic_sign_forward, traffic_sign_backward, width, width_carriageway, surface, cycleway_surface, smoothness, cycleway_smoothness, foot, horse, mtb_scale, sac_scale, access, toll, layer)
+INSERT INTO osm_transportation_merge_linestring_gen_z11(geometry, osm_id, highway, network, construction, is_bridge, is_tunnel, is_ford, expressway, is_oneway, junction, is_motorroad, z_order, segregated, bicycle, is_bicycle_road, bicycle_forward, bicycle_backward, cycleway, cycleway_both, cycleway_left, cycleway_right, sidewalk_bicycle, sidewalk_both_bicycle, sidewalk_left_bicycle, sidewalk_right_bicycle, cycleway_left_traffic_sign, sidewalk_left_traffic_sign, cycleway_left_oneway, sidewalk_left_oneway, cycleway_right_traffic_sign, sidewalk_right_traffic_sign, cycleway_right_oneway, sidewalk_right_oneway, maxspeed, maxspeed_forward, maxspeed_backward, traffic_sign, traffic_sign_forward, traffic_sign_backward, width, width_carriageway, surface, cycleway_surface, smoothness, cycleway_smoothness, foot, horse, mtb_scale, sac_scale, access, toll, layer)
 SELECT (ST_Dump(ST_LineMerge(ST_Collect(geometry)))).geom AS geometry,
        NULL::bigint AS osm_id,
        highway,
@@ -154,6 +162,14 @@ SELECT (ST_Dump(ST_LineMerge(ST_Collect(geometry)))).geom AS geometry,
        sidewalk_both_bicycle,
        sidewalk_left_bicycle,
        sidewalk_right_bicycle,
+       cycleway_left_traffic_sign,
+       sidewalk_left_traffic_sign,
+       cycleway_left_oneway,
+       sidewalk_left_oneway,
+       cycleway_right_traffic_sign,
+       sidewalk_right_traffic_sign,
+       cycleway_right_oneway,
+       sidewalk_right_oneway,
        maxspeed,
        maxspeed_forward,
        maxspeed_backward,
@@ -177,7 +193,7 @@ SELECT (ST_Dump(ST_LineMerge(ST_Collect(geometry)))).geom AS geometry,
        layer
 FROM osm_highway_linestring_gen_z11
 -- mapping.yaml pre-filter: motorway/trunk/primary/secondary/tertiary, with _link variants, construction, ST_IsValid()
-GROUP BY highway, network, construction, is_bridge, is_tunnel, is_ford, expressway, is_oneway, junction, is_motorroad, segregated, bicycle, is_bicycle_road, bicycle_forward, bicycle_backward, cycleway, cycleway_both, cycleway_left, cycleway_right, sidewalk_bicycle, sidewalk_both_bicycle, sidewalk_left_bicycle, sidewalk_right_bicycle, maxspeed, maxspeed_forward, maxspeed_backward, traffic_sign, traffic_sign_forward, traffic_sign_backward, width, width_carriageway, surface, cycleway_surface, smoothness, cycleway_smoothness, foot, horse, mtb_scale, sac_scale, access, toll, layer
+GROUP BY highway, network, construction, is_bridge, is_tunnel, is_ford, expressway, is_oneway, junction, is_motorroad, segregated, bicycle, is_bicycle_road, bicycle_forward, bicycle_backward, cycleway, cycleway_both, cycleway_left, cycleway_right, sidewalk_bicycle, sidewalk_both_bicycle, sidewalk_left_bicycle, sidewalk_right_bicycle, cycleway_left_traffic_sign, sidewalk_left_traffic_sign, cycleway_left_oneway, sidewalk_left_oneway, cycleway_right_traffic_sign, sidewalk_right_traffic_sign, cycleway_right_oneway, sidewalk_right_oneway, maxspeed, maxspeed_forward, maxspeed_backward, traffic_sign, traffic_sign_forward, traffic_sign_backward, width, width_carriageway, surface, cycleway_surface, smoothness, cycleway_smoothness, foot, horse, mtb_scale, sac_scale, access, toll, layer
 ;
 CREATE INDEX IF NOT EXISTS osm_transportation_merge_linestring_gen_z11_geometry_idx
     ON osm_transportation_merge_linestring_gen_z11 USING gist (geometry);
@@ -225,6 +241,14 @@ BEGIN
         sidewalk_both_bicycle,
         sidewalk_left_bicycle,
         sidewalk_right_bicycle,
+        cycleway_left_traffic_sign,
+        sidewalk_left_traffic_sign,
+        cycleway_left_oneway,
+        sidewalk_left_oneway,
+        cycleway_right_traffic_sign,
+        sidewalk_right_traffic_sign,
+        cycleway_right_oneway,
+        sidewalk_right_oneway,
         maxspeed,
         maxspeed_forward,
         maxspeed_backward,
@@ -282,6 +306,14 @@ BEGIN
         sidewalk_both_bicycle,
         sidewalk_left_bicycle,
         sidewalk_right_bicycle,
+        cycleway_left_traffic_sign,
+        sidewalk_left_traffic_sign,
+        cycleway_left_oneway,
+        sidewalk_left_oneway,
+        cycleway_right_traffic_sign,
+        sidewalk_right_traffic_sign,
+        cycleway_right_oneway,
+        sidewalk_right_oneway,
         maxspeed,
         maxspeed_forward,
         maxspeed_backward,
@@ -349,6 +381,14 @@ CREATE TABLE IF NOT EXISTS osm_transportation_merge_linestring_gen_z8(
     sidewalk_both_bicycle character varying,
     sidewalk_left_bicycle character varying,
     sidewalk_right_bicycle character varying,
+    cycleway_left_traffic_sign character varying,
+    sidewalk_left_traffic_sign character varying,
+    cycleway_left_oneway character varying,
+    sidewalk_left_oneway character varying,
+    cycleway_right_traffic_sign character varying,
+    sidewalk_right_traffic_sign character varying,
+    cycleway_right_oneway character varying,
+    sidewalk_right_oneway character varying,
     maxspeed integer,
     maxspeed_forward integer,
     maxspeed_backward integer,
@@ -363,7 +403,7 @@ CREATE TABLE IF NOT EXISTS osm_transportation_merge_linestring_gen_z8(
     cycleway_smoothness character varying
 );
 
-INSERT INTO osm_transportation_merge_linestring_gen_z8(geometry, osm_id, highway, network, construction, is_bridge, is_tunnel, is_ford, expressway, is_oneway, junction, is_motorroad, z_order, bicycle, bicycle_forward, bicycle_backward, cycleway, cycleway_both, cycleway_left, cycleway_right, sidewalk_bicycle, sidewalk_both_bicycle, sidewalk_left_bicycle, sidewalk_right_bicycle, maxspeed, maxspeed_forward, maxspeed_backward, width, width_carriageway, surface, cycleway_surface, smoothness, cycleway_smoothness)
+INSERT INTO osm_transportation_merge_linestring_gen_z8(geometry, osm_id, highway, network, construction, is_bridge, is_tunnel, is_ford, expressway, is_oneway, junction, is_motorroad, z_order, bicycle, bicycle_forward, bicycle_backward, cycleway, cycleway_both, cycleway_left, cycleway_right, sidewalk_bicycle, sidewalk_both_bicycle, sidewalk_left_bicycle, sidewalk_right_bicycle, cycleway_left_traffic_sign, sidewalk_left_traffic_sign, cycleway_left_oneway, sidewalk_left_oneway, cycleway_right_traffic_sign, sidewalk_right_traffic_sign, cycleway_right_oneway, sidewalk_right_oneway, maxspeed, maxspeed_forward, maxspeed_backward, width, width_carriageway, surface, cycleway_surface, smoothness, cycleway_smoothness)
 SELECT ST_Simplify(ST_LineMerge(ST_Collect(geometry)), ZRes(10)) AS geometry,
        NULL::bigint AS osm_id,
        highway,
@@ -388,6 +428,14 @@ SELECT ST_Simplify(ST_LineMerge(ST_Collect(geometry)), ZRes(10)) AS geometry,
        sidewalk_both_bicycle,
        sidewalk_left_bicycle,
        sidewalk_right_bicycle,
+       cycleway_left_traffic_sign,
+       sidewalk_left_traffic_sign,
+       cycleway_left_oneway,
+       sidewalk_left_oneway,
+       cycleway_right_traffic_sign,
+       sidewalk_right_traffic_sign,
+       cycleway_right_oneway,
+       sidewalk_right_oneway,
        maxspeed,
        maxspeed_forward,
        maxspeed_backward,
@@ -402,7 +450,7 @@ WHERE (highway IN ('motorway', 'trunk', 'primary') OR
        construction IN ('motorway', 'trunk', 'primary'))
        AND ST_IsValid(geometry)
        AND access IS NULL
-GROUP BY highway, network, construction, is_bridge, is_tunnel, is_ford, expressway, is_oneway, junction, is_motorroad, bicycle, bicycle_forward, bicycle_backward, cycleway, cycleway_both, cycleway_left, cycleway_right, sidewalk_bicycle, sidewalk_both_bicycle, sidewalk_left_bicycle, sidewalk_right_bicycle, maxspeed, maxspeed_forward, maxspeed_backward, width, width_carriageway, surface, cycleway_surface, smoothness, cycleway_smoothness
+GROUP BY highway, network, construction, is_bridge, is_tunnel, is_ford, expressway, is_oneway, junction, is_motorroad, bicycle, bicycle_forward, bicycle_backward, cycleway, cycleway_both, cycleway_left, cycleway_right, sidewalk_bicycle, sidewalk_both_bicycle, sidewalk_left_bicycle, sidewalk_right_bicycle, cycleway_left_traffic_sign, sidewalk_left_traffic_sign, cycleway_left_oneway, sidewalk_left_oneway, cycleway_right_traffic_sign, sidewalk_right_traffic_sign, cycleway_right_oneway, sidewalk_right_oneway, maxspeed, maxspeed_forward, maxspeed_backward, width, width_carriageway, surface, cycleway_surface, smoothness, cycleway_smoothness
 ;
 CREATE INDEX IF NOT EXISTS osm_transportation_merge_linestring_gen_z8_geometry_idx
     ON osm_transportation_merge_linestring_gen_z8 USING gist (geometry);
@@ -582,6 +630,14 @@ CREATE TABLE IF NOT EXISTS transportation.changes_z11
     sidewalk_both_bicycle character varying,
     sidewalk_left_bicycle character varying,
     sidewalk_right_bicycle character varying,
+    cycleway_left_traffic_sign character varying,
+    sidewalk_left_traffic_sign character varying,
+    cycleway_left_oneway character varying,
+    sidewalk_left_oneway character varying,
+    cycleway_right_traffic_sign character varying,
+    sidewalk_right_traffic_sign character varying,
+    cycleway_right_oneway character varying,
+    sidewalk_right_oneway character varying,
     maxspeed integer,
     maxspeed_forward integer,
     maxspeed_backward integer,
@@ -607,16 +663,16 @@ CREATE OR REPLACE FUNCTION transportation.store_z11() RETURNS trigger AS
 $$
 BEGIN
     IF (tg_op = 'DELETE' OR tg_op = 'UPDATE') THEN
-        INSERT INTO transportation.changes_z11(is_old, geometry, osm_id, highway, network, construction, is_bridge, is_tunnel, is_ford, expressway, is_oneway, junction, is_motorroad, z_order, bicycle, bicycle_forward, bicycle_backward, cycleway, cycleway_both, cycleway_left, cycleway_right, sidewalk_bicycle, sidewalk_both_bicycle, sidewalk_left_bicycle, sidewalk_right_bicycle, maxspeed, maxspeed_forward, maxspeed_backward, width, width_carriageway, surface, cycleway_surface, smoothness, cycleway_smoothness, foot, horse, mtb_scale, sac_scale, access, toll, layer)
-        VALUES (true, old.geometry, old.osm_id, old.highway, old.network, old.construction, old.is_bridge, old.is_tunnel, old.is_ford, old.expressway, old.is_oneway, old.junction, old.is_motorroad, old.z_order, old.bicycle, old.bicycle_forward, old.bicycle_backward, old.cycleway, old.cycleway_both, old.cycleway_left, old.cycleway_right, old.sidewalk_bicycle, old.sidewalk_both_bicycle, old.sidewalk_left_bicycle, old.sidewalk_right_bicycle, old.maxspeed, old.maxspeed_forward, old.maxspeed_backward, old.width, old.width_carriageway, old.surface, old.cycleway_surface, old.smoothness, old.cycleway_smoothness, old.foot, old.horse, old.mtb_scale, old.sac_scale,
+        INSERT INTO transportation.changes_z11(is_old, geometry, osm_id, highway, network, construction, is_bridge, is_tunnel, is_ford, expressway, is_oneway, junction, is_motorroad, z_order, bicycle, bicycle_forward, bicycle_backward, cycleway, cycleway_both, cycleway_left, cycleway_right, sidewalk_bicycle, sidewalk_both_bicycle, sidewalk_left_bicycle, sidewalk_right_bicycle, cycleway_left_traffic_sign, sidewalk_left_traffic_sign, cycleway_left_oneway, sidewalk_left_oneway, cycleway_right_traffic_sign, sidewalk_right_traffic_sign, cycleway_right_oneway, sidewalk_right_oneway, maxspeed, maxspeed_forward, maxspeed_backward, width, width_carriageway, surface, cycleway_surface, smoothness, cycleway_smoothness, foot, horse, mtb_scale, sac_scale, access, toll, layer)
+        VALUES (true, old.geometry, old.osm_id, old.highway, old.network, old.construction, old.is_bridge, old.is_tunnel, old.is_ford, old.expressway, old.is_oneway, old.junction, old.is_motorroad, old.z_order, old.bicycle, old.bicycle_forward, old.bicycle_backward, old.cycleway, old.cycleway_both, old.cycleway_left, old.cycleway_right, old.sidewalk_bicycle, old.sidewalk_both_bicycle, old.sidewalk_left_bicycle, old.sidewalk_right_bicycle, old.cycleway_left_traffic_sign, old.sidewalk_left_traffic_sign, old.cycleway_left_oneway, old.sidewalk_left_oneway, old.cycleway_right_traffic_sign, old.sidewalk_right_traffic_sign, old.cycleway_right_oneway, old.sidewalk_right_oneway, old.maxspeed, old.maxspeed_forward, old.maxspeed_backward, old.width, old.width_carriageway, old.surface, old.cycleway_surface, old.smoothness, old.cycleway_smoothness, old.foot, old.horse, old.mtb_scale, old.sac_scale,
             CASE
                 WHEN old.access IN ('private', 'no') THEN 'no'
                 ELSE NULL::text END,
             old.toll, old.layer);
     END IF;
     IF (tg_op = 'UPDATE' OR tg_op = 'INSERT') THEN
-        INSERT INTO transportation.changes_z11(is_old, geometry, osm_id, highway, network, construction, is_bridge, is_tunnel, is_ford, expressway, is_oneway, junction, is_motorroad, z_order, bicycle, bicycle_forward, bicycle_backward, cycleway, cycleway_both, cycleway_left, cycleway_right, sidewalk_bicycle, sidewalk_both_bicycle, sidewalk_left_bicycle, sidewalk_right_bicycle, maxspeed, maxspeed_forward, maxspeed_backward, width, width_carriageway, surface, cycleway_surface, smoothness, cycleway_smoothness, foot, horse, mtb_scale, sac_scale, access, toll, layer)
-        VALUES (false, new.geometry, new.osm_id, new.highway, new.network, new.construction, new.is_bridge, new.is_tunnel, new.is_ford, new.expressway, new.is_oneway, new.junction, new.is_motorroad, new.z_order, new.bicycle, new.bicycle_forward, new.bicycle_backward, new.cycleway, new.cycleway_both, new.cycleway_left, new.cycleway_right, new.sidewalk_bicycle, new.sidewalk_both_bicycle, new.sidewalk_left_bicycle, new.sidewalk_right_bicycle, new.maxspeed, new.maxspeed_forward, new.maxspeed_backward, new.width, new.width_carriageway, new.surface, new.cycleway_surface, new.smoothness, new.cycleway_smoothness, new.foot, new.horse, new.mtb_scale, new.sac_scale,
+        INSERT INTO transportation.changes_z11(is_old, geometry, osm_id, highway, network, construction, is_bridge, is_tunnel, is_ford, expressway, is_oneway, junction, is_motorroad, z_order, bicycle, bicycle_forward, bicycle_backward, cycleway, cycleway_both, cycleway_left, cycleway_right, sidewalk_bicycle, sidewalk_both_bicycle, sidewalk_left_bicycle, sidewalk_right_bicycle, cycleway_left_traffic_sign, sidewalk_left_traffic_sign, cycleway_left_oneway, sidewalk_left_oneway, cycleway_right_traffic_sign, sidewalk_right_traffic_sign, cycleway_right_oneway, sidewalk_right_oneway, maxspeed, maxspeed_forward, maxspeed_backward, width, width_carriageway, surface, cycleway_surface, smoothness, cycleway_smoothness, foot, horse, mtb_scale, sac_scale, access, toll, layer)
+        VALUES (false, new.geometry, new.osm_id, new.highway, new.network, new.construction, new.is_bridge, new.is_tunnel, new.is_ford, new.expressway, new.is_oneway, new.junction, new.is_motorroad, new.z_order, new.bicycle, new.bicycle_forward, new.bicycle_backward, new.cycleway, new.cycleway_both, new.cycleway_left, new.cycleway_right, new.sidewalk_bicycle, new.sidewalk_both_bicycle, new.sidewalk_left_bicycle, new.sidewalk_right_bicycle, new.cycleway_left_traffic_sign, new.sidewalk_left_traffic_sign, new.cycleway_left_oneway, new.sidewalk_left_oneway, new.cycleway_right_traffic_sign, new.sidewalk_right_traffic_sign, new.cycleway_right_oneway, new.sidewalk_right_oneway, new.maxspeed, new.maxspeed_forward, new.maxspeed_backward, new.width, new.width_carriageway, new.surface, new.cycleway_surface, new.smoothness, new.cycleway_smoothness, new.foot, new.horse, new.mtb_scale, new.sac_scale,
             CASE
                 WHEN new.access IN ('private', 'no') THEN 'no'
                 ELSE NULL::text END,
@@ -695,6 +751,14 @@ BEGIN
         h.sidewalk_both_bicycle,
         h.sidewalk_left_bicycle,
         h.sidewalk_right_bicycle,
+        h.cycleway_left_traffic_sign,
+        h.sidewalk_left_traffic_sign,
+        h.cycleway_left_oneway,
+        h.sidewalk_left_oneway,
+        h.cycleway_right_traffic_sign,
+        h.sidewalk_right_traffic_sign,
+        h.cycleway_right_oneway,
+        h.sidewalk_right_oneway,
         h.maxspeed,
         h.maxspeed_forward,
         h.maxspeed_backward,
@@ -740,6 +804,14 @@ BEGIN
              AND m.sidewalk_both_bicycle IS NOT DISTINCT FROM c.sidewalk_both_bicycle
              AND m.sidewalk_left_bicycle IS NOT DISTINCT FROM c.sidewalk_left_bicycle
              AND m.sidewalk_right_bicycle IS NOT DISTINCT FROM c.sidewalk_right_bicycle
+             AND m.cycleway_left_traffic_sign IS NOT DISTINCT FROM c.cycleway_left_traffic_sign
+             AND m.sidewalk_left_traffic_sign IS NOT DISTINCT FROM c.sidewalk_left_traffic_sign
+             AND m.cycleway_left_oneway IS NOT DISTINCT FROM c.cycleway_left_oneway
+             AND m.sidewalk_left_oneway IS NOT DISTINCT FROM c.sidewalk_left_oneway
+             AND m.cycleway_right_traffic_sign IS NOT DISTINCT FROM c.cycleway_right_traffic_sign
+             AND m.sidewalk_right_traffic_sign IS NOT DISTINCT FROM c.sidewalk_right_traffic_sign
+             AND m.cycleway_right_oneway IS NOT DISTINCT FROM c.cycleway_right_oneway
+             AND m.sidewalk_right_oneway IS NOT DISTINCT FROM c.sidewalk_right_oneway
              AND m.maxspeed IS NOT DISTINCT FROM c.maxspeed
              AND m.maxspeed_forward IS NOT DISTINCT FROM c.maxspeed_forward
              AND m.maxspeed_backward IS NOT DISTINCT FROM c.maxspeed_backward
@@ -785,6 +857,14 @@ BEGIN
              AND h.sidewalk_both_bicycle IS NOT DISTINCT FROM m.sidewalk_both_bicycle
              AND h.sidewalk_left_bicycle IS NOT DISTINCT FROM m.sidewalk_left_bicycle
              AND h.sidewalk_right_bicycle IS NOT DISTINCT FROM m.sidewalk_right_bicycle
+             AND h.cycleway_left_traffic_sign IS NOT DISTINCT FROM m.cycleway_left_traffic_sign
+             AND h.sidewalk_left_traffic_sign IS NOT DISTINCT FROM m.sidewalk_left_traffic_sign
+             AND h.cycleway_left_oneway IS NOT DISTINCT FROM m.cycleway_left_oneway
+             AND h.sidewalk_left_oneway IS NOT DISTINCT FROM m.sidewalk_left_oneway
+             AND h.cycleway_right_traffic_sign IS NOT DISTINCT FROM m.cycleway_right_traffic_sign
+             AND h.sidewalk_right_traffic_sign IS NOT DISTINCT FROM m.sidewalk_right_traffic_sign
+             AND h.cycleway_right_oneway IS NOT DISTINCT FROM m.cycleway_right_oneway
+             AND h.sidewalk_right_oneway IS NOT DISTINCT FROM m.sidewalk_right_oneway
              AND h.maxspeed IS NOT DISTINCT FROM m.maxspeed
              AND h.maxspeed_forward IS NOT DISTINCT FROM m.maxspeed_forward
              AND h.maxspeed_backward IS NOT DISTINCT FROM m.maxspeed_backward
@@ -837,6 +917,14 @@ BEGIN
         AND m.sidewalk_both_bicycle IS NOT DISTINCT FROM c.sidewalk_both_bicycle
         AND m.sidewalk_left_bicycle IS NOT DISTINCT FROM c.sidewalk_left_bicycle
         AND m.sidewalk_right_bicycle IS NOT DISTINCT FROM c.sidewalk_right_bicycle
+        AND m.cycleway_left_traffic_sign IS NOT DISTINCT FROM c.cycleway_left_traffic_sign
+        AND m.sidewalk_left_traffic_sign IS NOT DISTINCT FROM c.sidewalk_left_traffic_sign
+        AND m.cycleway_left_oneway IS NOT DISTINCT FROM c.cycleway_left_oneway
+        AND m.sidewalk_left_oneway IS NOT DISTINCT FROM c.sidewalk_left_oneway
+        AND m.cycleway_right_traffic_sign IS NOT DISTINCT FROM c.cycleway_right_traffic_sign
+        AND m.sidewalk_right_traffic_sign IS NOT DISTINCT FROM c.sidewalk_right_traffic_sign
+        AND m.cycleway_right_oneway IS NOT DISTINCT FROM c.cycleway_right_oneway
+        AND m.sidewalk_right_oneway IS NOT DISTINCT FROM c.sidewalk_right_oneway
         AND m.maxspeed IS NOT DISTINCT FROM c.maxspeed
         AND m.maxspeed_forward IS NOT DISTINCT FROM c.maxspeed_forward
         AND m.maxspeed_backward IS NOT DISTINCT FROM c.maxspeed_backward
@@ -858,7 +946,7 @@ BEGIN
         AND m.layer IS NOT DISTINCT FROM c.layer
     ;
 
-    INSERT INTO osm_transportation_merge_linestring_gen_z11(geometry, osm_id, highway, network, construction, is_bridge, is_tunnel, is_ford, expressway, is_oneway, junction, is_motorroad, z_order, bicycle, is_bicycle_road, bicycle_forward, bicycle_backward, cycleway, cycleway_both, cycleway_left, cycleway_right, sidewalk_bicycle, sidewalk_both_bicycle, sidewalk_left_bicycle, sidewalk_right_bicycle, maxspeed, maxspeed_forward, maxspeed_backward, traffic_sign, traffic_sign_forward, traffic_sign_backward, width, width_carriageway, surface, cycleway_surface, smoothness, cycleway_smoothness, foot, horse, mtb_scale, sac_scale, access, toll, layer)
+    INSERT INTO osm_transportation_merge_linestring_gen_z11(geometry, osm_id, highway, network, construction, is_bridge, is_tunnel, is_ford, expressway, is_oneway, junction, is_motorroad, z_order, bicycle, is_bicycle_road, bicycle_forward, bicycle_backward, cycleway, cycleway_both, cycleway_left, cycleway_right, sidewalk_bicycle, sidewalk_both_bicycle, sidewalk_left_bicycle, sidewalk_right_bicycle, cycleway_left_traffic_sign, sidewalk_left_traffic_sign, cycleway_left_oneway, sidewalk_left_oneway, cycleway_right_traffic_sign, sidewalk_right_traffic_sign, cycleway_right_oneway, sidewalk_right_oneway, maxspeed, maxspeed_forward, maxspeed_backward, traffic_sign, traffic_sign_forward, traffic_sign_backward, width, width_carriageway, surface, cycleway_surface, smoothness, cycleway_smoothness, foot, horse, mtb_scale, sac_scale, access, toll, layer)
     SELECT (ST_Dump(ST_LineMerge(ST_Collect(geometry)))).geom AS geometry,
         NULL::bigint AS osm_id,
         highway,
@@ -884,6 +972,14 @@ BEGIN
         sidewalk_both_bicycle,
         sidewalk_left_bicycle,
         sidewalk_right_bicycle,
+        cycleway_left_traffic_sign,
+        sidewalk_left_traffic_sign,
+        cycleway_left_oneway,
+        sidewalk_left_oneway,
+        cycleway_right_traffic_sign,
+        sidewalk_right_traffic_sign,
+        cycleway_right_oneway,
+        sidewalk_right_oneway,
         maxspeed,
         maxspeed_forward,
         maxspeed_backward,
@@ -916,7 +1012,7 @@ BEGIN
         WHERE
             NOT is_old
     )) AS t
-    GROUP BY highway, network, construction, is_bridge, is_tunnel, is_ford, expressway, is_oneway, junction, is_motorroad, bicycle, is_bicycle_road, bicycle_forward, bicycle_backward, cycleway, cycleway_both, cycleway_left, cycleway_right, sidewalk_bicycle, sidewalk_both_bicycle, sidewalk_left_bicycle, sidewalk_right_bicycle, maxspeed, maxspeed_forward, maxspeed_backward, traffic_sign, traffic_sign_forward, traffic_sign_backward, width, width_carriageway, surface, cycleway_surface, smoothness, cycleway_smoothness, foot, horse, mtb_scale, sac_scale, access, toll, layer
+    GROUP BY highway, network, construction, is_bridge, is_tunnel, is_ford, expressway, is_oneway, junction, is_motorroad, bicycle, is_bicycle_road, bicycle_forward, bicycle_backward, cycleway, cycleway_both, cycleway_left, cycleway_right, sidewalk_bicycle, sidewalk_both_bicycle, sidewalk_left_bicycle, sidewalk_right_bicycle, cycleway_left_traffic_sign, sidewalk_left_traffic_sign, cycleway_left_oneway, sidewalk_left_oneway, cycleway_right_traffic_sign, sidewalk_right_traffic_sign, cycleway_right_oneway, sidewalk_right_oneway, maxspeed, maxspeed_forward, maxspeed_backward, traffic_sign, traffic_sign_forward, traffic_sign_backward, width, width_carriageway, surface, cycleway_surface, smoothness, cycleway_smoothness, foot, horse, mtb_scale, sac_scale, access, toll, layer
     ;
 
     DROP TABLE osm_highway_linestring_original;
@@ -1013,6 +1109,14 @@ CREATE TABLE IF NOT EXISTS transportation.changes_z9
     sidewalk_both_bicycle character varying,
     sidewalk_left_bicycle character varying,
     sidewalk_right_bicycle character varying,
+    cycleway_left_traffic_sign character varying,
+    sidewalk_left_traffic_sign character varying,
+    cycleway_left_oneway character varying,
+    sidewalk_left_oneway character varying,
+    cycleway_right_traffic_sign character varying,
+    sidewalk_right_traffic_sign character varying,
+    cycleway_right_oneway character varying,
+    sidewalk_right_oneway character varying,
     maxspeed integer,
     maxspeed_forward integer,
     maxspeed_backward integer,
@@ -1031,12 +1135,12 @@ CREATE OR REPLACE FUNCTION transportation.store_z9() RETURNS trigger AS
 $$
 BEGIN
     IF (tg_op = 'DELETE' OR tg_op = 'UPDATE') THEN
-        INSERT INTO transportation.changes_z9(is_old, geometry, id, highway, network, construction, is_bridge, is_tunnel, is_ford, expressway, is_oneway, junction, is_motorroad, z_order, bicycle, bicycle_forward, bicycle_backward, cycleway, cycleway_both, cycleway_left, cycleway_right, sidewalk_bicycle, sidewalk_both_bicycle, sidewalk_left_bicycle, sidewalk_right_bicycle, maxspeed, maxspeed_forward, maxspeed_backward, width, width_carriageway, surface, cycleway_surface, smoothness, cycleway_smoothness)
-        VALUES (true, old.geometry, old.id, old.highway, old.network, old.construction, old.is_bridge, old.is_tunnel, old.is_ford, old.expressway, old.is_oneway, old.junction, old.is_motorroad, old.z_order, old.bicycle, old.bicycle_forward, old.bicycle_backward, old.cycleway, old.cycleway_both, old.cycleway_left, old.cycleway_right, old.sidewalk_bicycle, old.sidewalk_both_bicycle, old.sidewalk_left_bicycle, old.sidewalk_right_bicycle, old.maxspeed, old.maxspeed_forward, old.maxspeed_backward, old.width, old.width_carriageway, old.surface, old.cycleway_surface, old.smoothness, old.cycleway_smoothness);
+        INSERT INTO transportation.changes_z9(is_old, geometry, id, highway, network, construction, is_bridge, is_tunnel, is_ford, expressway, is_oneway, junction, is_motorroad, z_order, bicycle, bicycle_forward, bicycle_backward, cycleway, cycleway_both, cycleway_left, cycleway_right, sidewalk_bicycle, sidewalk_both_bicycle, sidewalk_left_bicycle, sidewalk_right_bicycle, cycleway_left_traffic_sign, sidewalk_left_traffic_sign, cycleway_left_oneway, sidewalk_left_oneway, cycleway_right_traffic_sign, sidewalk_right_traffic_sign, cycleway_right_oneway, sidewalk_right_oneway, maxspeed, maxspeed_forward, maxspeed_backward, width, width_carriageway, surface, cycleway_surface, smoothness, cycleway_smoothness)
+        VALUES (true, old.geometry, old.id, old.highway, old.network, old.construction, old.is_bridge, old.is_tunnel, old.is_ford, old.expressway, old.is_oneway, old.junction, old.is_motorroad, old.z_order, old.bicycle, old.bicycle_forward, old.bicycle_backward, old.cycleway, old.cycleway_both, old.cycleway_left, old.cycleway_right, old.sidewalk_bicycle, old.sidewalk_both_bicycle, old.sidewalk_left_bicycle, old.sidewalk_right_bicycle, old.cycleway_left_traffic_sign, old.sidewalk_left_traffic_sign, old.cycleway_left_oneway, old.sidewalk_left_oneway, old.cycleway_right_traffic_sign, old.sidewalk_right_traffic_sign, old.cycleway_right_oneway, old.sidewalk_right_oneway, old.maxspeed, old.maxspeed_forward, old.maxspeed_backward, old.width, old.width_carriageway, old.surface, old.cycleway_surface, old.smoothness, old.cycleway_smoothness);
     END IF;
     IF (tg_op = 'UPDATE' OR tg_op = 'INSERT') THEN
-        INSERT INTO transportation.changes_z9(is_old, geometry, id, highway, network, construction, is_bridge, is_tunnel, is_ford, expressway, is_oneway, junction, is_motorroad, z_order, bicycle, bicycle_forward, bicycle_backward, cycleway, cycleway_both, cycleway_left, cycleway_right, sidewalk_bicycle, sidewalk_both_bicycle, sidewalk_left_bicycle, sidewalk_right_bicycle, maxspeed, maxspeed_forward, maxspeed_backward, width, width_carriageway, surface, cycleway_surface, smoothness, cycleway_smoothness)
-        VALUES (false, new.geometry, new.id, new.highway, new.network, new.construction, new.is_bridge, new.is_tunnel, new.is_ford, new.expressway, new.is_oneway, new.junction, new.is_motorroad, new.z_order, new.bicycle, new.bicycle_forward, new.bicycle_backward, new.cycleway, new.cycleway_both, new.cycleway_left, new.cycleway_right, new.sidewalk_bicycle, new.sidewalk_both_bicycle, new.sidewalk_left_bicycle, new.sidewalk_right_bicycle, new.maxspeed, new.maxspeed_forward, new.maxspeed_backward, new.width, new.width_carriageway, new.surface, new.cycleway_surface, new.smoothness, new.cycleway_smoothness);
+        INSERT INTO transportation.changes_z9(is_old, geometry, id, highway, network, construction, is_bridge, is_tunnel, is_ford, expressway, is_oneway, junction, is_motorroad, z_order, bicycle, bicycle_forward, bicycle_backward, cycleway, cycleway_both, cycleway_left, cycleway_right, sidewalk_bicycle, sidewalk_both_bicycle, sidewalk_left_bicycle, sidewalk_right_bicycle, cycleway_left_traffic_sign, sidewalk_left_traffic_sign, cycleway_left_oneway, sidewalk_left_oneway, cycleway_right_traffic_sign, sidewalk_right_traffic_sign, cycleway_right_oneway, sidewalk_right_oneway, maxspeed, maxspeed_forward, maxspeed_backward, width, width_carriageway, surface, cycleway_surface, smoothness, cycleway_smoothness)
+        VALUES (false, new.geometry, new.id, new.highway, new.network, new.construction, new.is_bridge, new.is_tunnel, new.is_ford, new.expressway, new.is_oneway, new.junction, new.is_motorroad, new.z_order, new.bicycle, new.bicycle_forward, new.bicycle_backward, new.cycleway, new.cycleway_both, new.cycleway_left, new.cycleway_right, new.sidewalk_bicycle, new.sidewalk_both_bicycle, new.sidewalk_left_bicycle, new.sidewalk_right_bicycle, new.cycleway_left_traffic_sign, new.sidewalk_left_traffic_sign, new.cycleway_left_oneway, new.sidewalk_left_oneway, new.cycleway_right_traffic_sign, new.sidewalk_right_traffic_sign, new.cycleway_right_oneway, new.sidewalk_right_oneway, new.maxspeed, new.maxspeed_forward, new.maxspeed_backward, new.width, new.width_carriageway, new.surface, new.cycleway_surface, new.smoothness, new.cycleway_smoothness);
     END IF;
     RETURN NULL;
 END;
@@ -1110,6 +1214,14 @@ BEGIN
         h.sidewalk_both_bicycle,
         h.sidewalk_left_bicycle,
         h.sidewalk_right_bicycle,
+        h.cycleway_left_traffic_sign,
+        h.sidewalk_left_traffic_sign,
+        h.cycleway_left_oneway,
+        h.sidewalk_left_oneway,
+        h.cycleway_right_traffic_sign,
+        h.sidewalk_right_traffic_sign,
+        h.cycleway_right_oneway,
+        h.sidewalk_right_oneway,
         h.maxspeed,
         h.maxspeed_forward,
         h.maxspeed_backward,
@@ -1148,6 +1260,14 @@ BEGIN
              AND m.sidewalk_both_bicycle IS NOT DISTINCT FROM c.sidewalk_both_bicycle
              AND m.sidewalk_left_bicycle IS NOT DISTINCT FROM c.sidewalk_left_bicycle
              AND m.sidewalk_right_bicycle IS NOT DISTINCT FROM c.sidewalk_right_bicycle
+             AND m.cycleway_left_traffic_sign IS NOT DISTINCT FROM c.cycleway_left_traffic_sign
+             AND m.sidewalk_left_traffic_sign IS NOT DISTINCT FROM c.sidewalk_left_traffic_sign
+             AND m.cycleway_left_oneway IS NOT DISTINCT FROM c.cycleway_left_oneway
+             AND m.sidewalk_left_oneway IS NOT DISTINCT FROM c.sidewalk_left_oneway
+             AND m.cycleway_right_traffic_sign IS NOT DISTINCT FROM c.cycleway_right_traffic_sign
+             AND m.sidewalk_right_traffic_sign IS NOT DISTINCT FROM c.sidewalk_right_traffic_sign
+             AND m.cycleway_right_oneway IS NOT DISTINCT FROM c.cycleway_right_oneway
+             AND m.sidewalk_right_oneway IS NOT DISTINCT FROM c.sidewalk_right_oneway
              AND m.maxspeed IS NOT DISTINCT FROM c.maxspeed
              AND m.maxspeed_forward IS NOT DISTINCT FROM c.maxspeed_forward
              AND m.maxspeed_backward IS NOT DISTINCT FROM c.maxspeed_backward
@@ -1186,6 +1306,14 @@ BEGIN
              AND h.sidewalk_both_bicycle IS NOT DISTINCT FROM m.sidewalk_both_bicycle
              AND h.sidewalk_left_bicycle IS NOT DISTINCT FROM m.sidewalk_left_bicycle
              AND h.sidewalk_right_bicycle IS NOT DISTINCT FROM m.sidewalk_right_bicycle
+             AND h.cycleway_left_traffic_sign IS NOT DISTINCT FROM m.cycleway_left_traffic_sign
+             AND h.sidewalk_left_traffic_sign IS NOT DISTINCT FROM m.sidewalk_left_traffic_sign
+             AND h.cycleway_left_oneway IS NOT DISTINCT FROM m.cycleway_left_oneway
+             AND h.sidewalk_left_oneway IS NOT DISTINCT FROM m.sidewalk_left_oneway
+             AND h.cycleway_right_traffic_sign IS NOT DISTINCT FROM m.cycleway_right_traffic_sign
+             AND h.sidewalk_right_traffic_sign IS NOT DISTINCT FROM m.sidewalk_right_traffic_sign
+             AND h.cycleway_right_oneway IS NOT DISTINCT FROM m.cycleway_right_oneway
+             AND h.sidewalk_right_oneway IS NOT DISTINCT FROM m.sidewalk_right_oneway
              AND h.maxspeed IS NOT DISTINCT FROM m.maxspeed
              AND h.maxspeed_forward IS NOT DISTINCT FROM m.maxspeed_forward
              AND h.maxspeed_backward IS NOT DISTINCT FROM m.maxspeed_backward
@@ -1229,6 +1357,14 @@ BEGIN
         AND m.sidewalk_both_bicycle IS NOT DISTINCT FROM c.sidewalk_both_bicycle
         AND m.sidewalk_left_bicycle IS NOT DISTINCT FROM c.sidewalk_left_bicycle
         AND m.sidewalk_right_bicycle IS NOT DISTINCT FROM c.sidewalk_right_bicycle
+        AND m.cycleway_left_traffic_sign IS NOT DISTINCT FROM c.cycleway_left_traffic_sign
+        AND m.sidewalk_left_traffic_sign IS NOT DISTINCT FROM c.sidewalk_left_traffic_sign
+        AND m.cycleway_left_oneway IS NOT DISTINCT FROM c.cycleway_left_oneway
+        AND m.sidewalk_left_oneway IS NOT DISTINCT FROM c.sidewalk_left_oneway
+        AND m.cycleway_right_traffic_sign IS NOT DISTINCT FROM c.cycleway_right_traffic_sign
+        AND m.sidewalk_right_traffic_sign IS NOT DISTINCT FROM c.sidewalk_right_traffic_sign
+        AND m.cycleway_right_oneway IS NOT DISTINCT FROM c.cycleway_right_oneway
+        AND m.sidewalk_right_oneway IS NOT DISTINCT FROM c.sidewalk_right_oneway
         AND m.maxspeed IS NOT DISTINCT FROM c.maxspeed
         AND m.maxspeed_forward IS NOT DISTINCT FROM c.maxspeed_forward
         AND m.maxspeed_backward IS NOT DISTINCT FROM c.maxspeed_backward

@@ -126,15 +126,27 @@ $$ LANGUAGE SQL IMMUTABLE
 CREATE OR REPLACE FUNCTION bicycle_forward(bicycle text, 
                                     bicycle_forward text,
                                     sidewalk_bicycle text, sidewalk_both_bicycle text,
-                                    sidewalk_right_bicycle text)
+                                    sidewalk_right_bicycle text,
+                                    sidewalk_left_bicycle text, sidewalk_left_oneway text,
+                                    cycleway_both text, 
+                                    cycleway_left text, cycleway_right text,
+                                    cycleway_right_traffic_sign text,
+                                    cycleway_left_oneway text, cycleway_left_traffic_sign text)
                             RETURNS text AS
 $$
 SELECT CASE
+-- explicit bicycle-tags
            WHEN bicycle = 'no' OR bicycle_forward = 'no' THEN 'no'
            WHEN bicycle = 'use_sidepath' OR bicycle_forward = 'use_sidepath' THEN 'use_sidepath'
-           WHEN bicycle = 'optional_sidepath' OR bicycle_forward = 'optional_sidepath' OR 
-                sidewalk_bicycle = 'yes' OR sidewalk_both_bicycle = 'yes' OR sidewalk_right_bicycle = 'yes' -- is a usable sidewalk? than it's a optional track
+           WHEN bicycle = 'optional_sidepath' OR bicycle_forward = 'optional_sidepath' THEN 'optional_sidepath'
+-- calculated by cycleway
+           WHEN cycleway_right_traffic_sign ~ '^DE.*(240|237|244.1|241)' THEN 'use_sidepath'
+           WHEN cycleway_left_oneway = 'no' AND cycleway_left_traffic_sign ~ '^DE.*(240|237|244.1|241)' THEN 'use_sidepath'
+           WHEN cycleway_both = 'track' OR cycleway_right = 'track' THEN 'optional_sidepath'
+-- calculated by sidewalk
+           WHEN sidewalk_bicycle = 'yes' OR sidewalk_both_bicycle = 'yes' OR sidewalk_right_bicycle = 'yes' -- is a usable sidewalk? than it's a optional track
              THEN 'optional_sidepath'
+           WHEN sidewalk_left_bicycle = 'yes' AND sidewalk_left_oneway = 'no' THEN 'optional_sidepath'
            ELSE COALESCE(NULLIF(bicycle,''),NULLIF(bicycle_forward,''))
        END
 $$ LANGUAGE SQL IMMUTABLE
@@ -143,15 +155,27 @@ $$ LANGUAGE SQL IMMUTABLE
 CREATE OR REPLACE FUNCTION bicycle_backward(bicycle text, 
                                     bicycle_backward text,
                                     sidewalk_bicycle text, sidewalk_both_bicycle text,
-                                    sidewalk_left_bicycle text)
+                                    sidewalk_left_bicycle text,
+                                    sidewalk_right_bicycle text, sidewalk_right_oneway text,
+                                    cycleway_both text, 
+                                    cycleway_left text, cycleway_right text,
+                                    cycleway_left_traffic_sign text,
+                                    cycleway_right_oneway text, cycleway_right_traffic_sign text)
                             RETURNS text AS
 $$
 SELECT CASE
+-- explicit bicycle-tags
            WHEN bicycle = 'no' OR bicycle_backward = 'no' THEN 'no'
            WHEN bicycle = 'use_sidepath' OR bicycle_backward = 'use_sidepath' THEN 'use_sidepath'
-           WHEN bicycle = 'optional_sidepath' OR bicycle_backward = 'optional_sidepath' OR 
-                sidewalk_bicycle = 'yes' OR sidewalk_both_bicycle = 'yes' OR sidewalk_left_bicycle = 'yes' -- is a usable sidewalk? than it's a optional track
+           WHEN bicycle = 'optional_sidepath' OR bicycle_backward = 'optional_sidepath' THEN 'optional_sidepath' 
+-- calculated by cycleway
+           WHEN cycleway_left_traffic_sign ~ '^DE.*(240|237|244.1|241)' THEN 'use_sidepath'
+           WHEN cycleway_right_oneway = 'no' AND cycleway_right_traffic_sign ~ '^DE.*(240|237|244.1|241)' THEN 'use_sidepath'
+           WHEN cycleway_both = 'track' OR cycleway_left = 'track' THEN 'optional_sidepath'
+-- calculated by sidewalk
+           WHEN sidewalk_bicycle = 'yes' OR sidewalk_both_bicycle = 'yes' OR sidewalk_left_bicycle = 'yes' -- is a usable sidewalk? than it's a optional track
              THEN 'optional_sidepath'
+           WHEN sidewalk_right_bicycle = 'yes' AND sidewalk_right_oneway = 'no' THEN 'optional_sidepath'
            ELSE COALESCE(NULLIF(bicycle,''),NULLIF(bicycle_backward,''))
        END
 $$ LANGUAGE SQL IMMUTABLE
@@ -177,7 +201,8 @@ $$ LANGUAGE SQL IMMUTABLE
 CREATE OR REPLACE FUNCTION cycleway_left(cycleway text, cycleway_both text, 
                                         cycleway_left text, 
                                         sidewalk_bicycle text, sidewalk_both_bicycle text,
-                                        sidewalk_left_bicycle text)
+                                        sidewalk_left_bicycle text,
+                                        sidewalk_right_bicycle text, sidewalk_right_oneway text)
                             RETURNS text AS
 $$
 SELECT CASE
@@ -185,6 +210,7 @@ SELECT CASE
            WHEN cycleway = 'track' OR cycleway_both = 'track' OR cycleway_left = 'track' OR
                 sidewalk_bicycle = 'yes' OR sidewalk_both_bicycle = 'yes' OR sidewalk_left_bicycle = 'yes' -- is a usable sidewalk? than it's a optional track
              THEN 'track'
+           WHEN sidewalk_right_bicycle = 'yes' AND sidewalk_right_oneway = 'no' THEN 'track' -- oposite directions
            WHEN cycleway = 'no' OR cycleway_both = 'no' OR cycleway_left = 'no' THEN 'no'
            ELSE COALESCE(NULLIF(cycleway,''),NULLIF(cycleway_both,''),NULLIF(cycleway_left,''))
        END
@@ -194,7 +220,8 @@ $$ LANGUAGE SQL IMMUTABLE
 CREATE OR REPLACE FUNCTION cycleway_right(cycleway text, cycleway_both text, 
                                         cycleway_right text, 
                                         sidewalk_bicycle text, sidewalk_both_bicycle text,
-                                        sidewalk_right_bicycle text)
+                                        sidewalk_right_bicycle text,
+                                        sidewalk_left_bicycle text, sidewalk_left_oneway text)
                             RETURNS text AS
 $$
 SELECT CASE
@@ -202,6 +229,7 @@ SELECT CASE
            WHEN cycleway = 'track' OR cycleway_both = 'track' OR cycleway_right = 'track' OR
                 sidewalk_bicycle = 'yes' OR sidewalk_both_bicycle = 'yes' OR sidewalk_right_bicycle = 'yes' -- is a usable sidewalk? than it's a optional track
              THEN 'track'
+           WHEN sidewalk_left_bicycle = 'yes' AND sidewalk_left_oneway = 'no' THEN 'track' -- oposite directions
            WHEN cycleway = 'no' OR cycleway_both = 'no' OR cycleway_right = 'no' THEN 'no'
            ELSE COALESCE(NULLIF(cycleway,''),NULLIF(cycleway_both,''),NULLIF(cycleway_right,''))
        END

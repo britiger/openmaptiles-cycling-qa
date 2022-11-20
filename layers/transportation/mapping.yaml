@@ -179,6 +179,22 @@ cycleway_right_field: &cycleway_right
   key: "cycleway:right"
   name: cycleway_right
   type: string
+cycleway_left_oneway_field: &cycleway_left_oneway
+  key: "cycleway:left:oneway"
+  name: cycleway_left_oneway
+  type: string # no direction: need not 0 when not set
+cycleway_right_oneway_field: &cycleway_right_oneway
+  key: "cycleway:right:oneway"
+  name: cycleway_right_oneway
+  type: string # no direction: need not 0 when not set
+cycleway_left_traffic_sign_field: &cycleway_left_traffic_sign
+  key: "cycleway:left:traffic_sign"
+  name: cycleway_left_traffic_sign
+  type: string
+cycleway_right_traffic_sign_field: &cycleway_right_traffic_sign
+  key: "cycleway:right:traffic_sign"
+  name: cycleway_right_traffic_sign
+  type: string
 sidewalk_bicycle_field: &sidewalk_bicycle
   key: "sidewalk:bicycle"
   name: sidewalk_bicycle
@@ -194,6 +210,22 @@ sidewalk_left_bicycle_field: &sidewalk_left_bicycle
 sidewalk_right_bicycle_field: &sidewalk_right_bicycle
   key: "sidewalk:right:bicycle"
   name: sidewalk_right_bicycle
+  type: string
+sidewalk_left_oneway_field: &sidewalk_left_oneway
+  key: "sidewalk:left:oneway"
+  name: sidewalk_left_oneway
+  type: string # no direction: need not 0 when not set
+sidewalk_right_oneway_field: &sidewalk_right_oneway
+  key: "sidewalk:right:oneway"
+  name: sidewalk_right_oneway
+  type: string # no direction: need not 0 when not set
+sidewalk_left_traffic_sign_field: &sidewalk_left_traffic_sign
+  key: "sidewalk:left:traffic_sign"
+  name: sidewalk_left_traffic_sign
+  type: string
+sidewalk_right_traffic_sign_field: &sidewalk_right_traffic_sign
+  key: "sidewalk:right:traffic_sign"
+  name: sidewalk_right_traffic_sign
   type: string
 foot_field: &foot
   key: foot
@@ -315,10 +347,18 @@ tables:
     - *cycleway_both
     - *cycleway_left
     - *cycleway_right
+    - *cycleway_left_traffic_sign
+    - *cycleway_right_traffic_sign
+    - *cycleway_left_oneway
+    - *cycleway_right_oneway
     - *sidewalk_bicycle
     - *sidewalk_both_bicycle
     - *sidewalk_left_bicycle
     - *sidewalk_right_bicycle
+    - *sidewalk_left_traffic_sign
+    - *sidewalk_right_traffic_sign
+    - *sidewalk_left_oneway
+    - *sidewalk_right_oneway
     - *maxspeed
     - *maxspeed_forward
     - *maxspeed_backward
