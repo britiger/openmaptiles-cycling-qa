@@ -126,15 +126,27 @@ $$ LANGUAGE SQL IMMUTABLE
 CREATE OR REPLACE FUNCTION bicycle_forward(bicycle text, 
                                     bicycle_forward text,
                                     sidewalk_bicycle text, sidewalk_both_bicycle text,
-                                    sidewalk_right_bicycle text)
+                                    sidewalk_right_bicycle text,
+                                    sidewalk_left_bicycle text, sidewalk_left_oneway text,
+                                    cycleway_both text, 
+                                    cycleway_left text, cycleway_right text,
+                                    cycleway_right_traffic_sign text,
+                                    cycleway_left_oneway text, cycleway_left_traffic_sign text)
                             RETURNS text AS
 $$
 SELECT CASE
+-- explicit bicycle-tags
            WHEN bicycle = 'no' OR bicycle_forward = 'no' THEN 'no'
            WHEN bicycle = 'use_sidepath' OR bicycle_forward = 'use_sidepath' THEN 'use_sidepath'
-           WHEN bicycle = 'optional_sidepath' OR bicycle_forward = 'optional_sidepath' OR 
-                sidewalk_bicycle = 'yes' OR sidewalk_both_bicycle = 'yes' OR sidewalk_right_bicycle = 'yes' -- is a usable sidewalk? than it's a optional track
+           WHEN bicycle = 'optional_sidepath' OR bicycle_forward = 'optional_sidepath' THEN 'optional_sidepath'
+-- calculated by cycleway
+           WHEN cycleway_right_traffic_sign ~ '^DE.*(240|237|244.1|241)' THEN 'use_sidepath'
+           WHEN cycleway_left_oneway = 'no' AND cycleway_left_traffic_sign ~ '^DE.*(240|237|244.1|241)' THEN 'use_sidepath'
+           WHEN cycleway_both = 'track' OR cycleway_right = 'track' THEN 'optional_sidepath'
+-- calculated by sidewalk
+           WHEN sidewalk_bicycle = 'yes' OR sidewalk_both_bicycle = 'yes' OR sidewalk_right_bicycle = 'yes' -- is a usable sidewalk? than it's a optional track
              THEN 'optional_sidepath'
+           WHEN sidewalk_left_bicycle = 'yes' AND sidewalk_left_oneway = 'no' THEN 'optional_sidepath'
            ELSE COALESCE(NULLIF(bicycle,''),NULLIF(bicycle_forward,''))
        END
 $$ LANGUAGE SQL IMMUTABLE
@@ -143,15 +155,27 @@ $$ LANGUAGE SQL IMMUTABLE
 CREATE OR REPLACE FUNCTION bicycle_backward(bicycle text, 
                                     bicycle_backward text,
                                     sidewalk_bicycle text, sidewalk_both_bicycle text,
-                                    sidewalk_left_bicycle text)
+                                    sidewalk_left_bicycle text,
+                                    sidewalk_right_bicycle text, sidewalk_right_oneway text,
+                                    cycleway_both text, 
+                                    cycleway_left text, cycleway_right text,
+                                    cycleway_left_traffic_sign text,
+                                    cycleway_right_oneway text, cycleway_right_traffic_sign text)
                             RETURNS text AS
 $$
 SELECT CASE
+-- explicit bicycle-tags
            WHEN bicycle = 'no' OR bicycle_backward = 'no' THEN 'no'
            WHEN bicycle = 'use_sidepath' OR bicycle_backward = 'use_sidepath' THEN 'use_sidepath'
-           WHEN bicycle = 'optional_sidepath' OR bicycle_backward = 'optional_sidepath' OR 
-                sidewalk_bicycle = 'yes' OR sidewalk_both_bicycle = 'yes' OR sidewalk_left_bicycle = 'yes' -- is a usable sidewalk? than it's a optional track
+           WHEN bicycle = 'optional_sidepath' OR bicycle_backward = 'optional_sidepath' THEN 'optional_sidepath' 
+-- calculated by cycleway
+           WHEN cycleway_left_traffic_sign ~ '^DE.*(240|237|244.1|241)' THEN 'use_sidepath'
+           WHEN cycleway_right_oneway = 'no' AND cycleway_right_traffic_sign ~ '^DE.*(240|237|244.1|241)' THEN 'use_sidepath'
+           WHEN cycleway_both = 'track' OR cycleway_left = 'track' THEN 'optional_sidepath'
+-- calculated by sidewalk
+           WHEN sidewalk_bicycle = 'yes' OR sidewalk_both_bicycle = 'yes' OR sidewalk_left_bicycle = 'yes' -- is a usable sidewalk? than it's a optional track
              THEN 'optional_sidepath'
+           WHEN sidewalk_right_bicycle = 'yes' AND sidewalk_right_oneway = 'no' THEN 'optional_sidepath'
            ELSE COALESCE(NULLIF(bicycle,''),NULLIF(bicycle_backward,''))
        END
 $$ LANGUAGE SQL IMMUTABLE
@@ -177,7 +201,8 @@ $$ LANGUAGE SQL IMMUTABLE
 CREATE OR REPLACE FUNCTION cycleway_left(cycleway text, cycleway_both text, 
                                         cycleway_left text, 
                                         sidewalk_bicycle text, sidewalk_both_bicycle text,
-                                        sidewalk_left_bicycle text)
+                                        sidewalk_left_bicycle text,
+                                        sidewalk_right_bicycle text, sidewalk_right_oneway text)
                             RETURNS text AS
 $$
 SELECT CASE
@@ -185,6 +210,7 @@ SELECT CASE
            WHEN cycleway = 'track' OR cycleway_both = 'track' OR cycleway_left = 'track' OR
                 sidewalk_bicycle = 'yes' OR sidewalk_both_bicycle = 'yes' OR sidewalk_left_bicycle = 'yes' -- is a usable sidewalk? than it's a optional track
              THEN 'track'
+           WHEN sidewalk_right_bicycle = 'yes' AND sidewalk_right_oneway = 'no' THEN 'track' -- oposite directions
            WHEN cycleway = 'no' OR cycleway_both = 'no' OR cycleway_left = 'no' THEN 'no'
            ELSE COALESCE(NULLIF(cycleway,''),NULLIF(cycleway_both,''),NULLIF(cycleway_left,''))
        END
@@ -194,7 +220,8 @@ $$ LANGUAGE SQL IMMUTABLE
 CREATE OR REPLACE FUNCTION cycleway_right(cycleway text, cycleway_both text, 
                                         cycleway_right text, 
                                         sidewalk_bicycle text, sidewalk_both_bicycle text,
-                                        sidewalk_right_bicycle text)
+                                        sidewalk_right_bicycle text,
+                                        sidewalk_left_bicycle text, sidewalk_left_oneway text)
                             RETURNS text AS
 $$
 SELECT CASE
@@ -202,8 +229,91 @@ SELECT CASE
            WHEN cycleway = 'track' OR cycleway_both = 'track' OR cycleway_right = 'track' OR
                 sidewalk_bicycle = 'yes' OR sidewalk_both_bicycle = 'yes' OR sidewalk_right_bicycle = 'yes' -- is a usable sidewalk? than it's a optional track
              THEN 'track'
+           WHEN sidewalk_left_bicycle = 'yes' AND sidewalk_left_oneway = 'no' THEN 'track' -- oposite directions
            WHEN cycleway = 'no' OR cycleway_both = 'no' OR cycleway_right = 'no' THEN 'no'
            ELSE COALESCE(NULLIF(cycleway,''),NULLIF(cycleway_both,''),NULLIF(cycleway_right,''))
        END
 $$ LANGUAGE SQL IMMUTABLE
+                PARALLEL SAFE;
+
+-- try to build a semicolon separated list with traffic signs all with country prefixes
+-- TODO: Problems with control chars in [] - not easy to solve with
+CREATE OR REPLACE FUNCTION normalize_traffic_sign(traffic_sign text)
+                            RETURNS text AS
+$$
+DECLARE
+  i integer;
+  tf_arr text[];
+  tf_sign_arr text[];
+  last_cc text := '';
+  traffic_sign text := '';
+BEGIN
+  if $1 = '' THEN
+    RETURN NULL;
+  END IF;
+  tf_arr := regexp_split_to_array($1,'[,;]');
+  FOR i IN array_lower(tf_arr, 1) .. array_upper(tf_arr, 1) LOOP
+    tf_sign_arr := regexp_split_to_array(tf_arr[i],':');
+    IF array_upper(tf_arr, 1) = 1 AND array_upper(tf_sign_arr, 1) = 1
+    THEN
+      -- only 1 element without splited by colon => normal name oder TF
+      RETURN $1;
+    END IF;
+    CASE array_upper(tf_sign_arr, 1)
+      WHEN 2 THEN
+        IF char_length(trim(tf_sign_arr[1])) > 3
+        THEN
+          RAISE NOTICE 'traffic_sign with invalid country code: %', $1;
+          RETURN $1;
+        END IF;
+        --  traffic_sign with cc and number
+        traffic_sign := traffic_sign || trim(tf_sign_arr[1]) || ':' || trim(tf_sign_arr[2]);
+        last_cc := trim(tf_sign_arr[1]);
+      WHEN 1 THEN
+        --  traffic_sign without cc
+        IF last_cc = ''
+        THEN
+          RAISE NOTICE 'traffic_sign without country code (set fallback): %', $1;
+          last_cc := 'DE';
+        END IF;
+        traffic_sign := traffic_sign || last_cc || ':' || trim(tf_sign_arr[1]);
+      ELSE
+        -- more elements as expected
+        RAISE NOTICE 'traffic_sign with invalid colon count: %', $1;
+        RETURN $1;
+    END CASE;
+    IF i != array_upper(tf_arr, 1)
+    THEN
+      traffic_sign := traffic_sign || ';';
+    END IF;
+  END LOOP;
+  RETURN traffic_sign;
+END;
+$$ LANGUAGE plpgsql IMMUTABLE STRICT
+                PARALLEL SAFE;
+
+CREATE OR REPLACE FUNCTION traffic_sign_is_mandatory(traffic_sign text)
+                            RETURNS boolean AS
+$$
+  SELECT 
+    COALESCE(
+      NULLIF(';'||normalize_traffic_sign(traffic_sign)||';' ~ 'DE:(240|237|244.1|244.3|241|241-30|241-31|350.1);', false), -- german traffic_sign
+      NULLIF(';'||normalize_traffic_sign(traffic_sign)||';' ~ 'CH:(2.60|2.63|2.63.1);', false), -- swizerland traffic_sign
+      NULL
+    )
+  END
+$$ LANGUAGE SQL IMMUTABLE STRICT
+                PARALLEL SAFE;
+
+CREATE OR REPLACE FUNCTION traffic_sign_is_optional(traffic_sign text)
+                            RETURNS boolean AS
+$$
+  SELECT 
+    COALESCE(
+      NULLIF(';'||normalize_traffic_sign(traffic_sign)||';' ~ 'DE:(1020-12|1022-10|1022-14);', false), -- german traffic_sign
+      NULLIF(';'||normalize_traffic_sign(traffic_sign)||';' ~ 'AT:(§52.16|§52.17a|§52.17a-b);', false), -- austria traffic_sign
+      NULL
+    )
+  END
+$$ LANGUAGE SQL IMMUTABLE STRICT
                 PARALLEL SAFE;
