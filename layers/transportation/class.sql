@@ -310,7 +310,7 @@ CREATE OR REPLACE FUNCTION traffic_sign_is_optional(traffic_sign text)
 $$
   SELECT 
     COALESCE(
-      NULLIF(';'||normalize_traffic_sign(traffic_sign)||';' ~ 'DE:(1020-12|1022-10|1022-14);', false), -- german traffic_sign
+      NULLIF(';'||normalize_traffic_sign(traffic_sign)||';' ~ 'DE:(1020-12|1022-10|1022-12|1022-14|1022-15);', false), -- german traffic_sign
       NULLIF(';'||normalize_traffic_sign(traffic_sign)||';' ~ 'AT:(§52.16|§52.17a|§52.17a-b);', false), -- austria traffic_sign
       NULL
     )
